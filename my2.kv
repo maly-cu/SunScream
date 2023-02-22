@@ -1,0 +1,245 @@
+# NOTE: Was going to implement ScrollView in a screen but too much issues so abandoning it for PageLayout
+
+Navigator:
+    LandingPage:
+    HomePage:
+    AboutPage:
+    ActivePage:
+
+# Now let's create our individual pages like before:
+
+# __________________________________________ Landing Page __________________________________________
+
+<LandingPage>
+    name: "login"
+
+    BoxLayout:
+        orientation:"vertical"
+        padding: "20dp"
+
+        Label:
+            text: "SunScream"
+            size_hint: .25, .15
+            pos_hint: {"center_x": .5}
+            color: 159/255, 230/255, 255/255, 1
+
+        Image:
+            source: "images/brain_fart_pic.jpg"
+            size_hint: .25, .25
+            pos_hint: {"center_x": .5}
+
+        Label:
+            text: "No Sign Up, No Hassle!!\n Simply start the app before going about \nyour day to combat Sun Damage"
+            size_hint: .25, .25
+            pos_hint: {"center_x": .5}
+            halign: "center"
+            color: 159/255, 230/255, 255/255, 1
+
+        Button:
+            text:"Get Started"
+            size_hint: .5, .1
+            pos_hint: {"center_x": .5}
+            background_color: 250/255, 177/255, 109/255, 1
+            background_normal: ""
+
+
+            on_release:
+                app.root.current = "home"
+                root.manager.transition.direction = "left"
+
+# __________________________________________ Home Page __________________________________________
+<HomePage>
+    name: "home"
+
+    BoxLayout:
+        orientation:"vertical"
+        padding: "20dp"
+        spacing: "20dp"
+
+        Image:
+            source: "images/brain_fart_pic.jpg"
+            size_hint: .25, .25
+            pos_hint: {"center_x": .5}
+
+
+        Button:
+            text:" Going Out?\n Start Reminder"
+            text_size: self.width - dp(50), None
+            color: 0, 0, 0, 1
+
+            size_hint: .9, .1
+            pos_hint: {"center_x": .5}
+
+            background_normal: 'buttons/reminder1.png'
+            background_down: 'buttons/reminder2.png'
+            border: 30, 30, 30, 30
+#            background_color: 250/255, 177/255, 109/255, 1
+
+            on_release:
+                app.root.current = "active"
+                root.manager.transition.direction = "left"
+
+
+        Button:
+            text:" UVI ?\n SPF ?\n Get Help"
+            text_size: self.width - dp(50), None
+            color: 0, 0, 0, 1
+
+            pos_hint: {"center_x": .5}
+            size_hint: .9, .1
+
+            background_normal: 'buttons/help1.png'
+            background_down: 'buttons/help2.png'
+            border: 30, 30, 30, 30
+            #background_color: 250/255, 177/255, 109/255, 1
+
+            on_release:
+                app.root.current = "about"
+                root.manager.transition.direction = "left"
+
+        Button:
+            text:"What is SunScream?"
+            color: 250/255, 177/255, 109/255, 1
+
+            size_hint: .7, .06
+            pos_hint: {"center_x": .5}
+
+            background_normal: 'buttons/about_product1.png'
+            background_down: 'buttons/about_product2.png'
+            border: 0, 0, 0, 0
+
+
+            on_release:
+                app.root.current = "about"
+                root.manager.transition.direction = "left"
+
+# __________________________________________ About Page __________________________________________
+
+<AboutPage>
+    name: "about"
+
+    PageLayout:
+        padding: "20dp"
+
+        BoxLayout:
+            orientation: "vertical"
+            size_hint: .9, 1
+
+            Button:
+                text: "Back"
+                size_hint: .15, .08
+                pos_hint: {'right': 1, 'y': 0.9}
+                background_color: 250/255, 177/255, 109/255, 1
+                background_normal: ""
+
+                on_release:
+                    app.root.current = "home"
+                    root.manager.transition.direction = "right"
+
+            Label:
+                text: root.contents
+                color: 0, 0, 0, 1
+
+                # To wrap text round container
+                text_size: self.width, None
+                height: self.texture_size[1]
+
+# __________________________________________ Active Page __________________________________________
+
+<ActivePage>
+    name: "active"
+
+    BoxLayout:
+        orientation: "vertical"
+        size_hint: 1, 0.99
+
+        AnchorLayout:
+
+            # position of Anchor Layout
+            anchor_x: 'right'
+            anchor_y: 'top'
+
+            # size layout
+            size_hint: 1, 0.07
+
+            Button:
+                text: "Back"
+                size_hint: .2, .08
+#                pos_hint: {'right': 1, 'y': 0.9}
+                background_color: 159/255, 230/255, 255/255, 1
+                background_normal: ""
+
+                on_release:
+                    app.root.current = "home"
+                    root.manager.transition.direction = "right"
+
+        AnchorLayout:
+            # position of Anchor Layout
+            anchor_x: 'center'
+            anchor_y: 'top'
+
+            canvas:
+                Color:
+                    rgb: [.5, .692, 1]
+                Rectangle:
+                    pos: self.pos
+                    size: self.size
+
+
+            Widget:
+
+
+                # Since progress bar is an extremely simplistic vertical bar, drawing a circular one with canvas
+                ProgressBar:
+                    id: temperature_bar
+
+                    #min: -100
+                    #max: 100
+                    #pos_hint: {'x':.1}
+                    #size_hint_x: .8
+
+
+                    canvas:
+                        # Draw no-progress circle
+                        Color:
+                            rgb: 0.26, 0.26, 0.26, 1
+                        Ellipse:
+                            #size: root.size[0]/2, root.size[0]/2  # Equal size makes it a perfect circle, dp make it static
+                            #pos: root.size[0]/4, root.size[1]-self.size[1]/2
+                            size: dp(180), dp(180)  # Equal size makes it a perfect circle
+                            pos: root.center_x - self.size[0], root.center_y
+
+                        # Draw progress circle, small hack if there is no progress (angle_end = 0 results in full progress)
+                        Color:
+                            rgb: 1, 1, 0, 1
+                        Ellipse:
+                            size: dp(180), dp(180)  # Equal size makes it a perfect circle
+                            pos: root.center_x - self.size[0], root.center_y
+                            angle_end:
+                                (0.001 if self.value_normalized == 0 else self.value_normalized*360)
+
+                        # Draw the inner circle (colour should be equal to the background)
+                        Color:
+                            rgb: 1, 1, 1, 1
+                        Ellipse:
+                            size: (dp(180) - root.thickness, dp(180) - root.thickness)
+                            pos: (root.center_x - self.size[0]+ root.thickness / 2, root.center_y  + root.thickness / 2)
+
+                    size_hint: None,None
+
+                        #                       pos: (root.size[0]/4+ root.thickness / 2, root.size[1]-self.size[1]/2  + root.thickness / 2)
+
+                        #                          Dynamic sizing but it gets bigger as it increases which I don't like
+                        #                       pos: (self.pos[0] + root.thickness / 2, self.pos[1] + root.thickness / 2)
+                        #                       size: (self.size[0] - root.thickness, self.size[1] - root.thickness)
+
+                        # Center and draw the temperature text
+                        Rectangle:
+                            texture: self.label.texture
+                            size: self.texture_size
+                            pos: (self.size[0] / 2 - self.texture_size[0] / 2 + self.pos[0],
+                                 self.size[1] / 2 - self.texture_size[1] / 2 + self.pos[1]))
+
+
+
+

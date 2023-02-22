@@ -1,0 +1,236 @@
+# NOTE: Was going to implement ScrollView in a screen but too much issues so abandoning it for PageLayout
+
+Navigator:
+    LandingPage:
+    HomePage:
+    AboutPage:
+    ActivePage:
+
+# Now let's create our individual pages like before:
+
+# __________________________________________ Landing Page __________________________________________
+
+<LandingPage>
+    name: "login"
+
+    BoxLayout:
+        orientation:"vertical"
+        padding: "20dp"
+
+        Label:
+            text: "SunScream"
+            size_hint: .25, .15
+            pos_hint: {"center_x": .5}
+            color: 159/255, 230/255, 255/255, 1
+
+        Image:
+            source: "images/brain_fart_pic.jpg"
+            size_hint: .25, .25
+            pos_hint: {"center_x": .5}
+
+        Label:
+            text: "No Sign Up, No Hassle!!\n Simply start the app before going about \nyour day to combat Sun Damage"
+            size_hint: .25, .25
+            pos_hint: {"center_x": .5}
+            halign: "center"
+            color: 159/255, 230/255, 255/255, 1
+
+        Button:
+            text:"Get Started"
+            size_hint: .5, .1
+            pos_hint: {"center_x": .5}
+            background_color: 250/255, 177/255, 109/255, 1
+            background_normal: ""
+
+
+            on_release:
+                app.root.current = "home"
+                root.manager.transition.direction = "left"
+
+# __________________________________________ Home Page __________________________________________
+<HomePage>
+    name: "home"
+
+    BoxLayout:
+        orientation:"vertical"
+        padding: "20dp"
+        spacing: "20dp"
+
+        Image:
+            source: "images/brain_fart_pic.jpg"
+            size_hint: .25, .25
+            pos_hint: {"center_x": .5}
+
+
+        Button:
+            text:" Going Out?\n Start Reminder"
+            text_size: self.width - dp(50), None
+            color: 0, 0, 0, 1
+
+            size_hint: .9, .1
+            pos_hint: {"center_x": .5}
+
+            background_normal: 'buttons/reminder1.png'
+            background_down: 'buttons/reminder2.png'
+            border: 30, 30, 30, 30
+#            background_color: 250/255, 177/255, 109/255, 1
+
+            on_release:
+                app.root.current = "active"
+                root.manager.transition.direction = "left"
+
+
+        Button:
+            text:" UVI ?\n SPF ?\n Get Help"
+            text_size: self.width - dp(50), None
+            color: 0, 0, 0, 1
+
+            pos_hint: {"center_x": .5}
+            size_hint: .9, .1
+
+            background_normal: 'buttons/help1.png'
+            background_down: 'buttons/help2.png'
+            border: 30, 30, 30, 30
+            #background_color: 250/255, 177/255, 109/255, 1
+
+            on_release:
+                app.root.current = "about"
+                root.manager.transition.direction = "left"
+
+        Button:
+            text:"What is SunScream?"
+            color: 250/255, 177/255, 109/255, 1
+
+            size_hint: .7, .06
+            pos_hint: {"center_x": .5}
+
+            background_normal: 'buttons/about_product1.png'
+            background_down: 'buttons/about_product2.png'
+            border: 0, 0, 0, 0
+
+
+            on_release:
+                app.root.current = "about"
+                root.manager.transition.direction = "left"
+
+# __________________________________________ About Page __________________________________________
+
+<AboutPage>
+    name: "about"
+
+    PageLayout:
+        padding: "20dp"
+
+        BoxLayout:
+            orientation: "vertical"
+            size_hint: .9, 1
+
+            Button:
+                text: "Back"
+                size_hint: .15, .08
+                pos_hint: {'right': 1, 'y': 0.9}
+                background_color: 250/255, 177/255, 109/255, 1
+                background_normal: ""
+
+                on_release:
+                    app.root.current = "home"
+                    root.manager.transition.direction = "right"
+
+            Label:
+                text: root.contents
+                color: 0, 0, 0, 1
+
+                # To wrap text round container
+                text_size: self.width, None
+                height: self.texture_size[1]
+
+# __________________________________________ Active Page __________________________________________
+
+<ActivePage>
+    name: "active"
+
+    BoxLayout:
+        orientation: "vertical"
+        size_hint: 1, 0.99
+
+        AnchorLayout:
+
+            # position of Anchor Layout
+            anchor_x: 'right'
+            anchor_y: 'top'
+
+            # size layout
+            size_hint: 1, 0.2
+
+            Button:
+                text: "Back"
+                size_hint: .2, .08
+                #pos_hint: {'right': 1, 'y': 0.9}
+                background_color: 159/255, 230/255, 255/255, 1
+                background_normal: ""
+
+                on_release:
+                    app.root.current = "home"
+                    root.manager.transition.direction = "right"
+
+        AnchorLayout:
+            # position of Anchor Layout
+            anchor_x: 'center'
+            anchor_y: 'top'
+
+            size_hint: None, None
+            size: "150dp", "150dp"
+            pos_hint: {'center_x': .5, 'center_y': .5, 'top': 1}
+
+            canvas.before:
+                Color:
+                    rgba: root.bar_color + [0.3]
+                Line:
+                    width: root.bar_width
+                    ellipse: (self.x, self.y, self.width, self.height,0,360)
+
+            canvas.after:
+                Color:
+                    rgb: root.bar_color
+                Line:
+                    width: root.bar_width
+                    ellipse: (self.x, self.y, self.width, self.height, 0, root.set_temp*6)
+
+                    # set to celcius (freezing - 0 to boiling - 100). Since circle is 360 degrees,
+                    # multiply by 3.6 i.e. 360/100 for a range of 100 but since highest temp ever recorded is 51,
+                    # set my max at 360/60 so multiply by 6
+
+            Label:
+                text: root.temp_text
+                markup: True
+                font_size: "22dp"
+                pos_hint: {"center_x":0.5, "center_y":0.5}
+                halign: "center"
+                color: 0, 0, 0, 1
+
+        BoxLayout:
+            orientation: 'vertical'
+            size_hint: .9, .5
+            padding: "10dp"
+            #size: "200dp", "200dp"
+
+            Label:
+                text: "Top of box"
+                font_size: "22dp"
+                color: 0, 0, 0, 1
+
+            Button:
+                text: "Done! Indoors"
+                size_hint: .7, .15
+
+                pos_hint: {"center_x": .55, "y": .9}
+
+                background_normal: 'buttons/reminder1.png'
+                background_down: 'buttons/reminder2.png'
+                border: 3, 3, 3, 3
+
+                #background_color: 159/255, 230/255, 255/255, 1
+
+                on_release:
+                    app.root.current = "home"
+                    root.manager.transition.direction = "right"
