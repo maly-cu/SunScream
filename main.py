@@ -8,7 +8,6 @@ from kivy.uix.progressbar import ProgressBar
 from kivy.utils import platform
 from kivymd.uix.button import MDFlatButton
 from kivymd.uix.dialog import MDDialog
-import android
 
 
 class LandingPage(Screen):
@@ -95,7 +94,8 @@ class MyMainApp(App):
 
     def build(self):
         # Change window color
-        Window.size = (360, 600)
+        if platform not in ["android", "ios"]:
+            Window.size = (320, 640)
         Window.clearcolor = (1, 1, 1, 1)
         return kv
 
